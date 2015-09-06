@@ -5,15 +5,26 @@
 int length = 0;
 int longest_length = 0;
 int c;
-char string[20000];
-char longest[20000];
+int max = 10;
+//char string[20000];
+//char longest[20000];
 
 int main(void)
 {
+	char * string;
+	string = malloc(max * sizeof(char));
+	char * longest;
+	longest = malloc(max * sizeof(char));
 	do {
 	c = getchar();
 		if (isalpha(c)) {
-			string[length++] = c;
+			if (length >= max) {
+				max = 2*max;
+				string = realloc(string, max);
+				longest = realloc(longest, max);
+			}
+			*(string + length++) = c;
+//			string[length++] = c;
 		}
 		else if (length >= longest_length) {
 			longest_length = length;
@@ -24,7 +35,8 @@ int main(void)
 		}
 	} while (c != EOF);
 
+	free(string);
 	printf("%d characters in longest word: %s\n", longest_length, longest);
-
+	free(longest);
 	return 0;
 }
