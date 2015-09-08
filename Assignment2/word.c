@@ -22,14 +22,13 @@ int main(void)
 				longest = realloc(longest, max);
 			}
 			*(string + length++) = c;
+			continue;
 		}
 		else if (length >= longest_length) {
 			longest_length = length;
 			strcpy(longest, string);
-			length = 0;
-		} else {
-			length = 0;
 		}
+		length = 0;
 	} while (c != EOF);
 
 	free(string);
