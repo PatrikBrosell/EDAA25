@@ -6,8 +6,6 @@ int length = 0;
 int longest_length = 0;
 int c;
 int max = 10;
-//char string[20000];
-//char longest[20000];
 
 int main(void)
 {
@@ -24,7 +22,6 @@ int main(void)
 				longest = realloc(longest, max);
 			}
 			*(string + length++) = c;
-//			string[length++] = c;
 		}
 		else if (length >= longest_length) {
 			longest_length = length;
