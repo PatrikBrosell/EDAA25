@@ -6,6 +6,7 @@ int length = 0;
 int longest_length = 0;
 int c;
 int max = 10;
+char prnt[] = "%d characters in longest word: %s\n";
 
 int main(void)
 {
@@ -15,7 +16,7 @@ int main(void)
 	longest = malloc(max * sizeof(char));
 	do {
 	c = getchar();
-		if (isalpha(c)) {
+		if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
 			if (length >= max) {
 				max = 2*max;
 				string = realloc(string, max);
@@ -32,7 +33,7 @@ int main(void)
 	} while (c != EOF);
 
 	free(string);
-	printf("%d characters in longest word: %s\n", longest_length, longest);
+	printf(prnt, longest_length, longest);
 	free(longest);
 	return 0;
 }
