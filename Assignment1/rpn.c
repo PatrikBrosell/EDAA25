@@ -7,11 +7,11 @@
 int stack[N];
 size_t i = 0;
 int line = 1;
-int c;
+char er[] = "line %d: error at %s\n";
 
 void error(char c)
 {
-	printf("line %d: error at %c\n", line++, c);
+	printf(er, line++, (char[]) {c, '\0'});
 	while ((c = getchar()) != '\n') {
 	}
 	i = 0;
@@ -19,11 +19,12 @@ void error(char c)
 
 int main(void)
 {
-	int tmp = 0;
+	int c;
+	int tmp;
 	while ((c = getchar()) != EOF) {
 		tmp = 0;
-		if (isdigit(c)) {
-			while (isdigit(c)) {
+		if ((c >= '0') && (c <= '9')) {
+			while ((c >= '0') && (c <= '9')) {
 				tmp = 10 * tmp + c - '0';
 				c = getchar();
 			}
@@ -35,7 +36,7 @@ int main(void)
 			}
 		}
 
-		if (!isdigit(c)) {
+		if ((c < '0') || (c > '9')) {
 			switch (c) {
 			case '*':
 				stack[i-2] = stack[i-2] * stack[i-1];
@@ -44,7 +45,6 @@ int main(void)
 			case '/':
 				if (stack[i-1] == 0) {
 					error('/');
-
 				} else {
 					stack[i-2] = stack[i-2] / stack[i-1];
 					i--;
@@ -78,5 +78,4 @@ int main(void)
 			}
 		}
 	}
-	return 0;
 }
