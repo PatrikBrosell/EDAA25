@@ -4,7 +4,7 @@ OUT	= a.out
 FILE	= poly
 
 execute: compile
-	./a.out < input > output
+	./a.out > output
 	diff output correct
 
 compile: clean $(FILE).o malloc.o main.o
