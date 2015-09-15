@@ -10,30 +10,32 @@
 #define MAX 10
 
 
+
+
 struct poly_t {
 	int expo[MAX];
 	int coef[MAX];
 };
 
+
+
 poly_t* new_poly_from_string(const char* input)
 {
-	poly_t* poly = calloc(1, sizeof(poly_t));
 	int last_is_expo = 1;
 	int sign = 1; //1 er plus, -1 er minus
 	int c = 0;
 	int nbr = 0;
 	int ci = 0; //coef index
 	int ei = 0; //expo index
-	int stop = 0;
-	while ((c = *input++) != '\0' && stop == 0) {
-		while(isdigit(c)) {
-			nbr = 10 * nbr + c - '0';
-			if (strlen(input) == 0) {
-				stop = 1;
-			}
-			c = *input++;
-		}
 
+	poly_t* poly = calloc(1, sizeof(poly_t));
+	while ((c = *input++) != '\0') {
+		if (c >= '0' && c <= '9') { 		//isdigit(c)
+			nbr = 10 * nbr + c - '0';
+			if (strlen(input) != 0) {
+				continue;
+			}
+		}
 		if (last_is_expo == 1 && nbr != 0) {
 //			da e de en coeff
 			poly->coef[ci++] = sign*nbr;
@@ -61,6 +63,7 @@ poly_t* new_poly_from_string(const char* input)
 				poly->expo[ei++] = 1;
 				last_is_expo = 1;
 			}
+			continue;
 		}
 		if (c == '-') {
 			sign = -1;
@@ -68,11 +71,9 @@ poly_t* new_poly_from_string(const char* input)
 				poly->expo[ei++] = 1;
 				last_is_expo = 1;
 			}
+			continue;
 		}
 		nbr = 0; //reset nbr at end of loop.
-		if (c == '\0') {
-			break;
-		}
 	}
 	return poly;
 }
@@ -84,7 +85,7 @@ void free_poly(poly_t* poly)
 
 poly_t* mul(poly_t* a, poly_t* b)
 {
-	poly_t* r = calloc(100, sizeof(poly_t));
+	poly_t* r = calloc(1, sizeof(poly_t));
 
 	int coef[MAX*MAX] = { 0 };
 	int expo[MAX*MAX] = { 0 };
@@ -92,8 +93,6 @@ poly_t* mul(poly_t* a, poly_t* b)
 	int k = 0;
 	for(int i = 0; i < MAX; i++) {
 		for(int j = 0; j < MAX; j++) {
-//			r->coef[k] = a->coef[i] * b->coef[j];
-//			r->expo[k] = a->expo[i] + b->expo[j];
 			coef[k] = a->coef[i] * b->coef[j];
 			expo[k] = a->expo[i] + b->expo[j];
 			k++;
@@ -102,10 +101,7 @@ poly_t* mul(poly_t* a, poly_t* b)
 	//sort
 	for(int i = 0; i < MAX*MAX; i++) {
 		for(int j = 0; j < MAX*MAX; j++){
-//			if (r->expo[i] == r->expo[j] && i != j) {
 			if (expo[i] == expo[j] && i != j) {
-//				r->coef[i] = r->coef[i] + r->coef[j];
-//				r->coef[j] = 0;
 				coef[i] = coef[i] + coef[j];
 				coef[j] = 0;
 				expo[j] = 0;
@@ -141,35 +137,18 @@ void print_poly(poly_t* poly)
 	for (int i = 0; i < MAX; i++) {
 		tmpcoef = poly->coef[i];
 		tmpexpo = poly->expo[i];
-		if (tmpcoef == 0) {
-			continue;
-		}
-
 		if (tmpcoef < 0) {
-			printf(" - ");
-			tmpcoef = -tmpcoef;
-		} else if (i != 0 && tmpcoef != 0) {
-			printf(" + ");
+			printf(" - %d", -tmpcoef);
 		}
-
-		switch (tmpcoef) {
-		case 0:
-			//do nothing
-			break;
-		case 1:
-			if (tmpexpo != 0) {
-//				printf("x");
-			} else {
-				printf("%d", tmpcoef);
-			}
-			break;
-		default:
+		else if (i != 0 && tmpcoef > 0) {
+			printf(" + %d", tmpcoef);
+		}
+		else if (i == 0 && tmpcoef != 1) {
 			printf("%d", tmpcoef);
 		}
 
 		switch (tmpexpo) {
 		case 0:
-			//do nothing
 			break;
 		case 1:
 			printf("x");
@@ -179,5 +158,6 @@ void print_poly(poly_t* poly)
 
 		}
 	}
+
 	printf("\n");
 }
