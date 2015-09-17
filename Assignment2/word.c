@@ -2,33 +2,34 @@
 #include <string.h>
 #include <ctype.h>
 
+
 int main(void)
 {
 	int longest = 0;
 	int c;
-	int max = 100;
 	int longest_start = 0;
 	int i = 0;
 	int tmp_start = 0;
-	char *string = malloc(max);
+
+	char *string = malloc(100);
 
 	while ((c=getchar()) != EOF) {
-		if (i >= max) {
-			max = 2 * max;
-			string = realloc(string, max);
-		}
 		if ((c > 'z' || c < 'a') && (c < 'A' || c > 'Z')) {
 			*(string + i) = '\0';
-			if ((i - tmp_start) > longest) {
-				longest = i - tmp_start;
-				longest_start = tmp_start;
-			}
 			tmp_start = ++i;
-		} else {
+		}
+		else {
 			*(string + i++) = c;
 		}
-	}
+		if (i - tmp_start > longest) {
+			longest_start = tmp_start;
+			longest = i - tmp_start;
+		}
+		if (i >= longest_start + 1) {
+			string = realloc(string, i * 2);
+		}
 
+	}
 	printf("%d characters in longest word: %s\n", longest, string + longest_start);
 	free(string);
 	return 0;
